@@ -8,5 +8,5 @@ import (
 func main() {
 	r := gin.Default()
 	handlers.SetupHandlers(r)
-
+	r.Run("localhost:8080")
 }

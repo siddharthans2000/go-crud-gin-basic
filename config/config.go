@@ -1,31 +1,35 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"os"
 
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/joho/godotenv"
 )
 
 var db *gorm.DB
 
 func getEnvVariable(path string) string {
-	value := os.Getenv(path)
-	if value != "" {
-		log.Fatal("The env variable does not exist")
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error getting env file")
 	}
+	value := os.Getenv(path)
 	return value
 }
 
 func Connect() {
 	// mysqldb mentioned here is the name of the container we use for mysql db
-	d, err := gorm.Open(mysql.Open(getEnvVariable("MYSQL_ROOT_USERNAME")+":"+getEnvVariable("MYSQL_ROOT_PASSWORD")+
-		"@tcp(mysqldb)/"+getEnvVariable("MYSQL_DATABASE")+"?charset=utf8&parseTime=True&loc=Local"),
-		&gorm.Config{})
+	dsn := getEnvVariable("MYSQL_ROOT_USERNAME") + ":" + getEnvVariable("MYSQL_ROOT_PASSWORD") + "@tcp(172.17.0.2:3306)/" + getEnvVariable("MYSQL_DATABASE") + "?charset=utf8&parseTime=True"
+	// log.Fatalln(dsn)
+	fmt.Println(dsn)
+	d, err := gorm.Open("mysql", dsn)
 	if err != nil {
 		log.Fatal("Issue with connecting the DB")
-		panic(err)
+
 	}
 	db = d
 }
