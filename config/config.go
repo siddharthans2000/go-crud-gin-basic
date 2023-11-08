@@ -23,7 +23,8 @@ func getEnvVariable(path string) string {
 
 func Connect() {
 	// mysqldb mentioned here is the name of the container we use for mysql db
-	dsn := getEnvVariable("MYSQL_ROOT_USERNAME") + ":" + getEnvVariable("MYSQL_ROOT_PASSWORD") + "@tcp(172.17.0.2:3306)/" + getEnvVariable("MYSQL_DATABASE") + "?charset=utf8&parseTime=True"
+	dsn := getEnvVariable("MYSQL_ROOT_USERNAME") + ":" + getEnvVariable("MYSQL_ROOT_PASSWORD") +
+		"@tcp(172.17.0.2:3306)/" + getEnvVariable("MYSQL_DATABASE") + "?charset=utf8&parseTime=True"
 	// log.Fatalln(dsn)
 	fmt.Println(dsn)
 	d, err := gorm.Open("mysql", dsn)
